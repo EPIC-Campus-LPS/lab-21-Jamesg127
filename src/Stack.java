@@ -1,59 +1,64 @@
+import java.util.EmptyStackException;
+
 public class Stack {
-    private String[] stackArray; // Array to store stack elements
-
-    // Constructor to initialize the stack with a specific capacity
-    public Stack() {
-        stackArray = new String[0]; // Initialize the array
+    private int[] nums;
+    public Stack(){
+        nums = new int[0];
     }
-
-    // Method to add an element to the stack
-    public void push(String element) {
-        String[] newArray = new String[stackArray.length + 1];
-        for(int i = 0; i < stackArray.length; i ++){
-            newArray[i+1] = stackArray[i];
+    /**
+     * adds element to the top of the stack O(n)
+     * @param element
+     */
+    public void push(int element){
+        int[] tempArrary = new int[nums.length + 1];
+        for(int i = 0; i < nums.length - 1; i++) {
+            tempArrary[i] = nums[i];
         }
-        newArray[0] = element;
-        stackArray = newArray;
+        tempArrary[nums.length] = element;
+        nums = tempArrary;
     }
 
-    // Method to remove the top element from the stack
-    public String pop() {
-        String[] newArray = new String[stackArray.length - 1];
-        for(int i = 1; i < stackArray.length; i ++){
-            newArray[i-1] = stackArray[i];
+    /**
+     * removes the top element from the stack O(n)
+     * @return the element that was removed
+     */
+    public int pop(){
+        if (nums.length == 0){
+            throw new EmptyStackException();
         }
-        String element = stackArray[0];
-        stackArray = newArray;
-        return element;
-    }
-
-    // Method to check the top element without removing it
-    public String peek() {
-        return stackArray[0];
-    }
-
-    // Method to check if the stack is empty
-    public boolean isEmpty() {
-        return stackArray.length == 0;
-    }
-
-
-    // Method to get the current size of the stack
-    public int size() {
-        return stackArray.length;
-    }
-
-    // Method to display the stack contents
-    public void display() {
-        if (isEmpty()) {
-            System.out.println("Stack is empty!");
-            return;
+        else{
+            int[] tempArrary = new int[nums.length - 1];
+            for(int i = 0; i < nums.length - 1; i++){
+                tempArrary[i] = nums[i];
+            }
+            int ret = nums[nums.length - 1];
+            nums = tempArrary;
+            return ret;
         }
-        System.out.print("Stack elements: ");
-        for (int i = 0; i < stackArray.length; i++) {
-            System.out.print(stackArray[i] + " ");
-        }
-        System.out.println();
+    }
+
+    /**
+     * looks at the top of the stack O(1)
+     * @return the top of the stack
+     */
+    public int peek(){
+        return nums[nums.length - 1];
+    }
+
+    /**
+     * returns the amount of elements in the stack O(1)
+     * @return size of stack
+     */
+    public int size(){
+        return nums.length;
+    }
+
+    /**
+     * checks if the stack is empty O(1)
+     * @return true if stack is empty, false otherwise
+     */
+    public boolean isEmpty(){
+        return nums.length == 0;
     }
 
 }
