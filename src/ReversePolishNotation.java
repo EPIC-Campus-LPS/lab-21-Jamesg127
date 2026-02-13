@@ -1,107 +1,78 @@
 import java.util.ArrayList;
-
+import java.util.Stack;
 public class ReversePolishNotation {
     public static int evaluatePostfix(String input){
-        Stack s = new Stack();
-        for(int i = 0; i < input.length() - 1; i++){
+        Stack<Integer> s = new Stack<>();
+        for(int i = 0; i < input.length(); i++){
             if(input.substring(i, i + 1).equals("+")){
-                System.out.println("num" + s.peek());
                 int firstNum = s.pop();
-                System.out.println("num" + s.peek());
-                s.push(firstNum + s.pop());
-                System.out.println("result" + s.peek());
+                int nextNum = s.pop();
+                s.push(firstNum + nextNum);
             }
             else if(input.substring(i, i + 1).equals("-")){
-                s.push(s.pop() - s.pop());
+                int firstNum = s.pop();
+                int nextNum = s.pop();
+                s.push(nextNum - firstNum);
             }
             else if(input.substring(i, i + 1).equals("*")){
-                s.push(s.pop() * s.pop());
+                int firstNum = s.pop();
+                int nextNum = s.pop();
+                s.push(firstNum * nextNum);
             }
             else if(input.substring(i, i + 1).equals("/")){
-                s.push(s.pop() / s.pop());
+                int firstNum = s.pop();
+                int nextNum = s.pop();
+                s.push(nextNum / firstNum);
             }
             else{
                 s.push(Integer.parseInt(input.substring(i, i + 1)));
-                System.out.println(s.peek());
             }
         }
         return s.peek();
     }
     public static String infixToPostfix(String input){
-        Stack s = new Stack();
+        Stack<Integer> s = new Stack<>();
         String output = "";
-        String numbers = "0123456789";
-        for(int i = 0; i < input.length() - 1; i++){
-            if(numbers.contains(input.substring(i, i + 1))){
+        String letters = "qwertyuiopasdfghjklzxcvbnm";
+        for(int i = 0; i < input.length(); i++){
+            if(letters.contains(input.substring(i, i + 1))){
                 output += input.substring(i, i + 1);
             }
-            else{
-                if(input.substring(i, i + 1).equals("+")){
-                    while(s.peek() >= 0){
-                        if(s.peek() == 0){
-                            s.pop();
-                            output += "+";
-                        }
-                        else if(s.peek() == 1){
-                            s.pop();
-                            output += "-";
-                        }
-                        else if(s.peek() == 2){
-                            s.pop();
-                            output += "*";
-                        }
-                        else if(s.peek() == 3){
-                            s.pop();
-                            output += "/";
-                        }
+            else if(input.substring(i, i + 1).equals("+")){
+                for(int j = 0; j < s.size(); j++){
+                    if(s.peek() > 1 || s.isEmpty()){
+                        output += s.pop();
                     }
-                    s.push(0);
                 }
-                else if(input.substring(i, i + 1).equals("-")){
-                    while(s.peek() >= 0){
-                        if(s.peek() == 0){
-                            s.pop();
-                            output += "+";
-                        }
-                        else if(s.peek() == 1){
-                            s.pop();
-                            output += "-";
-                        }
-                        else if(s.peek() == 2){
-                            s.pop();
-                            output += "*";
-                        }
-                        else if(s.peek() == 3){
-                            s.pop();
-                            output += "/";
-                        }
-                    }
+                s.push(0);
+
+            }
+            else if(input.substring(i, i + 1).equals("-")){
+                if(s.peek() > 1){
                     s.push(1);
                 }
-                else if(input.substring(i, i + 1).equals("*")){
+                else{
+                    s.pop();
+                    output += "-";
+                }
+            }
+            else if(input.substring(i, i + 1).equals("*")){
+                if(s.peek() < 2){
                     s.push(2);
                 }
-                else if(input.substring(i, i + 1).equals("/")) {
+                else{
+                    output += "*";
+                }
+            }
+            else if(input.substring(i, i + 1).equals("/")) {
+                if(s.peek() < 2){
                     s.push(3);
                 }
-                else if(input.substring(i, i + 1).equals("(")){
-                    s.push(4);
-                }
-                else if(input.substring(i, i + 1).equals(")")){
-                    while(s.peek() < 4){
-                        if(s.peek() == 0){
-                            s.pop();
-                            output += "+";
-                        }
-                        if(s.peek() == 1){
-                            s.pop();
-                            output += "-";
-                        }
-                    }
+                else{
+                    output += "/";
                 }
             }
         }
         return output;
     }
-
 }
